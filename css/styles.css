@@ -1,0 +1,40 @@
+.homecss{
+    min-height: 100svh;
+    background-image: url("../images/DEPORTES-01.jpg");
+}
+
+.headercontent{
+    background-image: url("../images/deporte2.png");
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.titulop{
+    height: 50px;
+}
+
+.footercontent{
+    height: auto;
+    background-color: black;
+}
+
+.texto{
+    height: 15.5rem;
+}
+
+.icono{
+    font-size: 30px;
+}
+
+.instagram{
+    color: lightslategrey;
+}
+
+.logincontent{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100svh;
+}
