@@ -6,24 +6,22 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <link rel="icon" href="./images/Logo3.ico" type="image/x-icon">
-    <link rel="stylesheet" href="./css/styles.css">
+    <link rel="icon" href="../images/Logo3.ico" type="image/x-icon">
+    <link rel="stylesheet" href="../css/styles.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <!-- <script src="./javascript/javascriptpagina.js"></script> -->
     <title>Tienda Don Gio</title>
 </head>
 <body>
-    <header class="cabecera">
+<header class="cabecera">
         <div class="headercontent">
-            <img src="./images/Logo3.png" alt="fondo" class="img-fluid">
+            <img src="../images/Logo3.png" alt="fondo" class="img-fluid">
         </div>
     </header>
     <div class="homecss">
         <nav class="navbar navbar-expand-lg sticky-top bg-body-tertiary">
             <div class="container-fluid">
                 <a class="navbar-brand btn">
-                    <img src="./images/logo4.png" alt="fondo" style="width: 100%;">
+                    <img src="../images/logo4.png" alt="fondo" style="width: 100%;">
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -38,7 +36,7 @@
                         </li>
                         <li class="nav-item dropdown">
                             <?php
-                                include './db/conexion.php';
+                                include '../db/conexion.php';
                                 session_start();
                                 if (isset($_SESSION['usuario'])) {
                                     $texto  = $_SESSION['usuario']['nombre'];
@@ -53,15 +51,15 @@
                                     if($_SESSION['usuario']['rol'] == "admin"){
                                         echo "    <li><a class='dropdown-item btn'><span class='fw-bold'>su rol es ".$_SESSION['usuario']['rol']."</span></a></li>";
                                         echo "    <hr class='m-0 p-0'/>";
-                                        echo "    <li><a class='dropdown-item' href='./vistas/productos.php'>Inventario Productos</a></li>";
-                                        echo "    <li><a class='dropdown-item' href='./vistas/usuarios.php'>Usuarios sistema</a></li>";
+                                        echo "    <li><a class='dropdown-item btn'><span class='fw-bold text-primary active'>Inventario Productos</span></a></li>";
+                                        echo "    <li><a class='dropdown-item' href='./adminusuarios.php'>Usuarios sistema</a></li>";
                                         echo "    <li>";
                                         echo "        <hr class='dropdown-divider'>";
                                         echo "    </li>";
                                     }elseif($_SESSION['usuario']['rol'] == "vendedor"){
                                         echo "    <li><a class='dropdown-item btn'>su rol es ".$_SESSION['usuario']['rol']."</a></li>";
-                                        echo "    <hr class='m-0 p-0'/>";
-                                        echo "    <li><a class='dropdown-item' href='./vistas/productosUsuario.php'>Productos usuario</a></li>";
+                                        echo "    <li><a class='dropdown-item' href='./page/usuariopage.php'>Carros usuario</a></li>";
+                                        echo "    <li><a class='dropdown-item' href='./page/perfil.php'>Perfil</a></li>";
                                         echo "    <li>";
                                         echo "        <hr class='dropdown-divider'>";
                                         echo "    </li>";
@@ -87,57 +85,74 @@
                 </div>
             </div>
         </nav>
-        <div class="container-fluid contenido">
-            <div class="container bg-white my-3 rounded p-3">
-                <div class="row">
-                    <?php
-                        // Define the number of items per page (adjust as needed)
-                        $items_per_page = 9;
+        <div class="contenido">
+            <br />
+            <div class="container-md mb-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <button class="btn btn-success btn-sm fw-bold">Agregar nuevo producto</button>
+            </div>
+            <div class="container-fluid-sm px-2">
+                <div class="container-md py-2 mb-2 text-center bg-white rounded">
+                    <h3>Inventario de productos</h3>
+                </div>
+                <div class="container-md p-3 text-center bg-white rounded table-responsive tableinfoadmin mb-3">
+                    <table class="table table-striped table-hover table-sm">
+                        <thead>
+                            <tr>
+                                <th scope="col">Id</th>
+                                <th scope="col" style="width: 200px;">Nombre</th>
+                                <th scope="col" style="width: 250px;">Descripcion</th>
+                                <th scope="col" style="width: 130px;">Cantidad Stock</th>
+                                <th scope="col" style="width: 100px;">Valor</th>
+                                <th scope="col" style="width: 150px;">Fecha Creado</th>
+                                <th scope="col" style="width: 150px;">Fecha Actualizado</th>
+                                <th scope="col" style="width: 150px;">Fecha Eliminado</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                                $user  = $_SESSION['usuario']['correo'];
+                                $userquery = "SELECT * FROM usuarios WHERE correo = '$user'";
+                                $resultuser = $conn->query($userquery);
+                                $rowuser = $resultuser->fetch_assoc();
 
-                        // Get the total number of items (replace with your actual query)
-                        $total_items_query = "SELECT COUNT(*) FROM productos";  // Replace with your table name
-                        $result = $conn->query($total_items_query);
-                        $total_items = $result->fetch_assoc()["COUNT(*)"];
-                        //$total_items2 = count($total_items);
+                                $sql = "SELECT * FROM productos";
+                                $result = $conn->query($sql);
+                                $contador = 0;
 
-                        // Calculate the number of pages (rounded up)
-                        //var_dump($total_items. "/" .$items_per_page);
-                        $total_pages = ceil($total_items / $items_per_page);
-                        // Get the current page number (default to 1)
-                        $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-
-                        // Limit the query based on current page and items per page
-                        $offset = ($current_page - 1) * $items_per_page;
-                        $limit = $items_per_page;
-                        $sql = "SELECT * FROM productos LIMIT $limit OFFSET $offset";  // Replace with your actual query
-                        $result = $conn->query($sql);
-
-                        while ($row = $result->fetch_assoc()) {
-                    ?>
-                        <div class="col-sm-6 col-md-3 mb-3 d-flex justify-content-center align-items-center">
-                            <div class="card" style="width: 16rem;">
-                                <img src="https://www.elcarrocolombiano.com/wp-content/uploads/2021/02/20210208-TOP-75-CARROS-MAS-VENDIDOS-DE-COLOMBIA-EN-ENERO-2021-01.jpg" class="card-img-top" alt="carro">
-                                <div class="card-body">
-                                    <h5 class="card-title text-wrap titulop"><?php echo $row["nombre"] ?></h5>
-                                    <p class="card-text text-wrap">
-                                        <?php echo $row["descripcion"] ?>
-                                    </p>
-                                    <div class="d-flex">
-                                        <button id="<?php echo $row["id"] ?>" class="btn btn-sm btn-success w-100">Comprar</button>
-                                        <div class="mx-1"></div>
-                                        <button id="<?php echo $row["id"] ?>" class="btn btn-sm btn-primary">
-                                            <i class="bi bi-cart-fill" title="agregar al carrito"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    <?php
-                        };
-                    ?>
+                                while ($row = $result->fetch_assoc()) {
+                                    if ($row["id_cliente"] == $rowuser['id']) {
+                                        $contador++;
+                            ?>
+                                <tr>
+                                    <td><?php echo ($contador) ?></td>
+                                    <td><?php echo $row["nombre"] ?></td>
+                                    <td><?php echo $row["descripcion"] ?></td>
+                                    <td><?php echo $row["cantidad"] ?></td>
+                                    <td><?php echo $row["precio"] ?></td>
+                                    <td><?php echo $row["created_at"] ?></td>
+                                    <td><?php echo $row["updated_at"] ?></td>
+                                    <td><?php echo $row["deleted_at"] ?></td>
+                                    <td>
+                                        <div class="d-flex justify-content-center align-items-center">
+                                            <div>
+                                                <i class="bi bi-pencil-fill text-primary btn" data-bs-toggle="modal" data-bs-target="#exampleModalEdit"
+                                                title="editar" id="<?php echo $row["id"] ?>"></i>
+                                            </div>
+                                            <div>
+                                                <i class="bi bi-trash-fill text-danger btn eliminarV" title="eliminar" id="<?php echo $row["id"] ?>"></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php
+                                    }
+                                };
+                            ?>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            <br />
         </div>
     </div>
     <footer>

@@ -1,4 +1,5 @@
 $('#enviar').click(enviar);
+$('#registro').click(registro);
 
 function enviar() {
     const usuario = document.getElementById('usuario').value;
@@ -36,6 +37,36 @@ function enviar() {
 
 }
 
+function registro() {
+    const usuario = document.getElementById('usuario').value;
+    const correo = document.getElementById('correo').value;
+    const pass = document.getElementById('contrasena').value;
+    const rol = "usuario";
+    const telefono = document.getElementById('telefono').value;
+    const base_url = 'http://localhost/tiendadongio/';
+
+    const dataregistro = {
+        usuario: usuario,
+        correo: correo,
+        pass: pass,
+        rol: rol,
+        telefono: telefono
+    };
+
+    if(usuario == "" || pass == "" || telefono == "" || correo == ""){
+        camposVacios();
+    }else{
+        $.ajax({
+            url: base_url+"php/controlador.php?op=registrosesion",
+            type: "POST",
+            dataType: "json",
+            data: dataregistro,
+        }).done(function(data){
+            console.log(JSON.stringify(data));
+        })
+    }
+}
+
 function camposVacios(){
     Swal.fire({
         title: "!! Error !!",
@@ -54,6 +85,13 @@ function exitoSesion(){
     Swal.fire({
         title: "!! Exito !!",
         text: "a ingresado al sistema",
+        icon: "success"
+    });
+}
+function registroSesion(){
+    Swal.fire({
+        title: "!! Exito !!",
+        text: "se ha registrado el nuevo usuario",
         icon: "success"
     });
 }

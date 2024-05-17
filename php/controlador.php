@@ -30,4 +30,24 @@
         }
     }
 
+    if($op == "registrosesion"){
+        date_default_timezone_set('America/Bogota');
+        $usuario = $_POST['usuario'];
+        $correo = $_POST['correo'];
+        $pass = $_POST['pass'];
+        $rol = $_POST['rol'];
+        $telefono = $_POST['telefono'];
+        $fechaCreacion = date('YYYY-mm-dd');
+
+        $userquery = "INSERT INTO usuarios(nombre, correo, password, rol, telefono, createdAt) 
+        VALUES ('$usuario','$correo','$pass','$rol','$telefono', '$fechaCreacion')";
+        $result = $conn->query($userquery);
+        $row = $result->fetch_assoc();
+
+        if($result->num_rows > 0){
+            echo json_encode(["msj1" => "exito"]);
+        }else{
+            echo json_encode(["msj2" => "error sql"]);
+        }
+    }
 ?>

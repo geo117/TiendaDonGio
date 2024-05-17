@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="../css/styles.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="../javascript/javascriptpagina.js"></script>
+    <script src="../js/sesion.js"></script>
     <title>Tienda Don Gio</title>
 </head>
 
@@ -35,29 +35,29 @@
     </nav>
     <main class="homecss">
         <div class="d-flex justify-content-center align-items-center p-3 logincontent">
-            <div class="bg-white rounded p-3 content" style="width: 30%;">
+            <div class="bg-white rounded p-3 content" style="width: 400px;">
                 <div class="text-center">
                     <img src="../images/Logo3.png" alt="imagen" class="img-fluid">
                 </div>
-                <form action="../archivosphp/registroUser.php" method="post">
+                <div>
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="basic-addon1"><i class="bi bi-person-circle"></i></span>
-                        <input type="text" class="form-control" name="usuario" placeholder="usuario" aria-label="Username" aria-describedby="basic-addon1">
+                        <input type="text" class="form-control" id="usuario" name="usuario" placeholder="usuario" aria-label="Username" aria-describedby="basic-addon1">
                     </div>
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="basic-addon1"><i class="bi bi-envelope-at-fill"></i></span>
-                        <input type="text" class="form-control" name="correo" placeholder="Correo" aria-label="Username" aria-describedby="basic-addon1">
+                        <input type="text" class="form-control" id="correo" name="correo" placeholder="Correo" aria-label="Username" aria-describedby="basic-addon1">
                     </div>
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="basic-addon1"><i class="bi bi-telephone-fill"></i></span>
-                        <input type="text" class="form-control" name="telefono" placeholder="Telefono" aria-label="Username" aria-describedby="basic-addon1">
+                        <input type="text" class="form-control" id="telefono" name="telefono" placeholder="Telefono" aria-label="Username" aria-describedby="basic-addon1">
                     </div>
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="basic-addon1"><i class="bi bi-lock-fill"></i></span>
-                        <input type="text" class="form-control" name="contrasena" placeholder="contraseña" aria-label="Username" aria-describedby="basic-addon1">
+                        <input type="text" class="form-control" id="contrasena" name="contrasena" placeholder="contraseña" aria-label="Username" aria-describedby="basic-addon1">
                     </div>
-                    <button type="submit" class="btn btn-primary w-100">Registrarse</button>
-                </form>
+                    <button id="registro" class="btn btn-primary w-100">Registrarse</button>
+                </div>
                 <div class="my-2 text-center">
                     <span class="mx-1">Si ya tienes cuenta</span>
                     <a href="./login.php" class="text-decoration-none">Inicia sesion</a>
