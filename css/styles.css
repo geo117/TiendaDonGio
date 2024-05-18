@@ -17,7 +17,7 @@
 
 .footercontent{
     height: auto;
-    background-color: black;
+    background-image: url('../images/fondodooter.jpg');
 }
 
 .texto{
@@ -37,4 +37,8 @@
     justify-content: center;
     align-items: center;
     height: 100svh;
+}
+
+.tablaproductos{
+    height: 43rem;
 }

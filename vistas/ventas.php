@@ -53,8 +53,8 @@
                                 if ($_SESSION['usuario']['rol'] == "admin") {
                                     echo "    <li><a class='dropdown-item btn'><span class='fw-bold'>su rol es " . $_SESSION['usuario']['rol'] . "</span></a></li>";
                                     echo "    <hr class='m-0 p-0'/>";
-                                    echo "    <li><a class='dropdown-item btn'><span class='fw-bold text-primary active'>Inventario Productos</span></a></li>";
-                                    echo "    <li><a class='dropdown-item' href='./ventas.php'>Ventas realizadas</a></li>";
+                                    echo "    <li><a class='dropdown-item btn' href='./productos.php'><span>Inventario Productos</span></a></li>";
+                                    echo "    <li><a class='dropdown-item' ><span class='fw-bold text-primary active'>Ventas realizadas</span></a></li>";
                                     echo "    <li><a class='dropdown-item' href='./usuarios.php'>Usuarios</a></li>";
                                     echo "    <li>";
                                     echo "        <hr class='dropdown-divider'>";
@@ -83,26 +83,21 @@
         </nav>
         <div class="contenido">
             <br />
-            <div class="container-md mb-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                <button class="btn btn-success btn-sm fw-bold">Agregar nuevo producto</button>
-            </div>
             <div class="container-fluid-sm px-2">
                 <div class="container-md py-2 mb-2 text-center bg-white rounded">
-                    <h3>Inventario de productos</h3>
+                    <h3>Ventas realizadas</h3>
                 </div>
                 <div class="container-md p-3 text-center bg-white rounded table-responsive mb-3 tablaproductos">
                     <table class="table table-striped table-hover table-sm">
                         <thead>
                             <tr>
                                 <th scope="col">Id</th>
-                                <th scope="col" style="width: 200px;">Nombre</th>
-                                <th scope="col" style="width: 250px;">Descripcion</th>
-                                <th scope="col" style="width: 130px;">Cantidad Stock</th>
-                                <th scope="col" style="width: 100px;">Valor</th>
-                                <th scope="col" style="width: 100px;">usuario</th>
-                                <th scope="col" style="width: 150px;">Fecha Creado</th>
-                                <th scope="col" style="width: 150px;">Fecha Actualizado</th>
-                                <th scope="col">Acciones</th>
+                                <th scope="col" style="width: 200px;">Usuario</th>
+                                <th scope="col" style="width: 300px;">Producto</th>
+                                <th scope="col" style="width: 200px;">Cantidad vendida</th>
+                                <th scope="col" style="width: 200px;">Precio Producto</th>
+                                <th scope="col" style="width: 200px;">Valor total venta</th>
+                                <th scope="col">Fecha comrpa</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -112,7 +107,10 @@
                                 $resultuser = $conn->query($userquery);
                                 $rowuser = $resultuser->fetch_assoc();
 
-                                $sql = "SELECT p.*,u.nombre as usuario FROM productos as p INNER JOIN usuarios as u ON p.id_cliente = u.id";
+                                $sql = "SELECT v.id,v.cantidad,v.total,v.createdAt,u.nombre as usuario,p.nombre as producto,p.precio
+                                FROM ventas as v 
+                                INNER JOIN usuarios as u ON v.id_cliente = u.id
+                                INNER JOIN productos as p ON v.id_producto = p.id";
                                 $result = $conn->query($sql);
                                 $contador = 0;
 
@@ -121,27 +119,15 @@
                             ?>
                                 <tr>
                                     <td><?php echo ($contador) ?></td>
-                                    <td><?php echo $row["nombre"] ?></td>
-                                    <td><?php echo $row["descripcion"] ?></td>
+                                    <td><?php echo $row["usuario"] ?></td>
+                                    <td><?php echo $row["producto"] ?></td>
                                     <td><?php echo $row["cantidad"] ?></td>
                                     <td><?php echo $row["precio"] ?></td>
-                                    <td><?php echo $row["usuario"] ?></td>
-                                    <td><?php echo $row["created_at"] ?></td>
-                                    <td><?php echo $row["updated_at"] ?></td>
-                                    <td>
-                                        <div class="d-flex justify-content-center align-items-center">
-                                            <div>
-                                                <i class="bi bi-pencil-fill text-primary btn editarproducto" data-bs-toggle="modal" 
-                                                data-bs-target="#exampleModalEdit" title="editar" id="<?php echo $row["id"] ?>"></i>
-                                            </div>
-                                            <div>
-                                                <i class="bi bi-trash-fill text-danger btn eliminarV" title="eliminar" id="<?php echo $row["id"] ?>"></i>
-                                            </div>
-                                        </div>
-                                    </td>
+                                    <td><?php echo $row["total"] ?></td>
+                                    <td><?php echo $row["createdAt"] ?></td>
                                 </tr>
                             <?php
-                            };
+                                };
                             ?>
                         </tbody>
                     </table>
@@ -149,66 +135,6 @@
             </div>
         </div>
 
-        <!-- Modal creacion -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar Nuevo producto</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" id="nombre" placeholder="Nombre del producto" aria-label="Username" aria-describedby="basic-addon1">
-                        </div>
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" id="descripcion" placeholder="Descripcion del producto" aria-label="Username" aria-describedby="basic-addon1">
-                        </div>
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" id="cantidad" placeholder="Cantidad del producto" aria-label="Username" aria-describedby="basic-addon1">
-                        </div>
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" id="precio" placeholder="Precio del producto" aria-label="Username" aria-describedby="basic-addon1">
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="button" class="btn btn-sm btn-primary" id="crear">Guardar Cambios</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal Editar -->
-        <div class="modal fade" id="exampleModalEdit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Editar Producto</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <input type="hidden" class="form-control" id="idproducto" placeholder="Nombre del producto" aria-label="Username" aria-describedby="basic-addon1">
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" id="nombre_edit" placeholder="Nombre del producto" aria-label="Username" aria-describedby="basic-addon1">
-                        </div>
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" id="descripcion_edit" placeholder="Descripcion del producto" aria-label="Username" aria-describedby="basic-addon1">
-                        </div>
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" id="cantidad_edit" placeholder="Cantidad del producto" aria-label="Username" aria-describedby="basic-addon1">
-                        </div>
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" id="precio_edit" placeholder="Precio del producto" aria-label="Username" aria-describedby="basic-addon1">
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="button" class="btn btn-sm btn-primary" id="editar">Guardar Cambios</button>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
     <footer>
         <div class="footercontent">
