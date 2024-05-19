@@ -17,6 +17,7 @@
             if ($usuario == $row['correo'] && $pass == $row['password']) {
                 // Iniciar sesión del usuario
                 $_SESSION['usuario'] = [
+                    'id' => $row['id'],
                     'nombre' => $row['nombre'],
                     'correo' => $row['correo'],
                     'rol' => $row['rol']
@@ -117,6 +118,28 @@
     }
 
     if($op == "comprarProducto"){
+        $id =  $_POST['id_producto'];
+        $idcomprador = $_SESSION['usuario']['id'];
+
+        $userquery = "SELECT * FROM productos WHERE id = $id";
+        $result = $conn->query($userquery);
+        $row = $result->fetch_assoc();
+
+        $fechaCreacion = date('Y-m-d');
         
+        $idp = $row['id'];
+        $id_clientep = $row['id_cliente'];
+        $nombrep = $row['nombre'];
+        $descripcionp = $row['descripcion'];
+        $cantidadp = $row['cantidad'];
+        $preciop = $row['precio'];
+        $imagenp = $row['imagen'];
+        $created_atp = $row['created_at'];
+
+        $ventasquery = "INSERT INTO ventas (id_cliente,id_producto,estado_compra,cantidad,createdAt)
+        VALUES ('$idcomprador','$idp','pendiente','$cantidadp',$fechaCreacion)";
+        $resultventas = $conn->query($ventasquery);
+        //var_dump($ventasquery);
+        echo json_encode($resultventas);
     }
 ?>

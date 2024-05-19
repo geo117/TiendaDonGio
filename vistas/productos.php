@@ -66,7 +66,7 @@
                                     echo "    </li>";
                                 }
                                 echo "    <li>";
-                                echo "      <a class='dropdown-item' href='./vistas/logout.php' name='enviar'>Cerrar sesion</a></li>";
+                                echo "      <a class='dropdown-item' href='./logout.php' name='enviar'>Cerrar sesion</a></li>";
                                 echo "    </li>";
                                 echo "</ul>";
                             } else {
@@ -83,8 +83,8 @@
         </nav>
         <div class="contenido">
             <br />
-            <div class="container-md mb-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                <button class="btn btn-success btn-sm fw-bold">Agregar nuevo producto</button>
+            <div class="container-md mb-2">
+                <button class="btn btn-success btn-sm fw-bold" data-bs-toggle="modal" data-bs-target="#exampleModal">Agregar nuevo producto</button>
             </div>
             <div class="container-fluid-sm px-2">
                 <div class="container-md py-2 mb-2 text-center bg-white rounded">
@@ -225,7 +225,7 @@
                             <p class="text-center text-muted m-0">Copyright &copy; 2024</p>
                             <p class="text-center text-muted m-0">Todos los derechos reservados</p>
                             <p class="text-center text-muted m-0">Desarrollado por Andres Geovanny Rojas Pedraza</p>
-                            <p class="text-center text-muted m-0">Desarrollo Web ACA 3</p>
+                            <p class="text-center text-muted m-0">Ingeniería de Software 1 ACA 3</p>
                         </div>
                     </div>
                     <div class="col-md-6">

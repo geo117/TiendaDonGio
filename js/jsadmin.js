@@ -93,7 +93,19 @@ function editarProducto() {
         dataType: "json",
         data: dataregistro
     }).done(function(data){
-        console.log(JSON.stringify(data));
+        if(data["msj1"] == "exito"){
+            Swal.fire({
+                title: "!! Exito !!",
+                text: "se ha editado el producto",
+                icon: "success"
+            });
+        }else{
+            Swal.fire({
+                title: "!! Error!!",
+                text: "Error en la edicion del producto",
+                icon: "error"
+            });
+        }
     });
 
 }

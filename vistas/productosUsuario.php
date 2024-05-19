@@ -36,11 +36,11 @@
                         <?php
                             include '../db/conexion.php';
                             session_start();
-                            if (isset($_SESSION['usuario'])){
+                            if (isset($_SESSION['usuario'])) {
                                 echo "<li class='nav-item'>";
                                 echo "   <a class='nav-link active btn' aria-current='page'><i class='bi bi-basket3-fill'></i></a>";
                                 echo "</li>";
-                            }else{
+                            } else {
                                 echo "<li class='nav-item'>";
                                 echo "   <a class='nav-link active btn' disabled aria-current='page'><i class='bi bi-basket3-fill'></i></a>";
                                 echo "</li>";
@@ -48,40 +48,40 @@
                         ?>
                         <li class="nav-item dropdown">
                             <?php
-                                if (isset($_SESSION['usuario'])) {
-                                    $texto  = $_SESSION['usuario']['nombre'];
-                                    $primer_espacio = strpos($texto, " ");
-                                    $primeros_caracteres = substr($texto, 0, $primer_espacio);
-                                    $textofinal = $primeros_caracteres == "" ? $texto : $primeros_caracteres;
+                            if (isset($_SESSION['usuario'])) {
+                                $texto  = $_SESSION['usuario']['nombre'];
+                                $primer_espacio = strpos($texto, " ");
+                                $primeros_caracteres = substr($texto, 0, $primer_espacio);
+                                $textofinal = $primeros_caracteres == "" ? $texto : $primeros_caracteres;
 
-                                    echo "<a class='nav-link dropdown-toggle' role='button' data-bs-toggle='dropdown' aria-expanded='false'>";
-                                    echo "Bienvenido " . $textofinal;
-                                    echo "</a>";
-                                    echo "<ul class='dropdown-menu dropdown-menu-lg-end'>";
-                                    if ($_SESSION['usuario']['rol'] == "admin") {
-                                        echo "    <li><a class='dropdown-item btn'><span class='fw-bold'>su rol es " . $_SESSION['usuario']['rol'] . "</span></a></li>";
-                                        echo "    <hr class='m-0 p-0'/>";
-                                        echo "    <li><a class='dropdown-item btn'><span class='fw-bold text-primary active'>Inventario Productos</span></a></li>";
-                                        echo "    <li><a class='dropdown-item' href='./adminusuarios.php'>Usuarios sistema</a></li>";
-                                        echo "    <li>";
-                                        echo "        <hr class='dropdown-divider'>";
-                                        echo "    </li>";
-                                    }else {
-                                        echo "    <li><a class='dropdown-item btn'><span class='fw-bold'>su rol es " . $_SESSION['usuario']['rol'] . "</span></a></li>";
-                                        echo "    <li>";
-                                        echo "        <hr class='dropdown-divider'>";
-                                        echo "    </li>";
-                                    }
+                                echo "<a class='nav-link dropdown-toggle' role='button' data-bs-toggle='dropdown' aria-expanded='false'>";
+                                echo "Bienvenido " . $textofinal;
+                                echo "</a>";
+                                echo "<ul class='dropdown-menu dropdown-menu-lg-end'>";
+                                if ($_SESSION['usuario']['rol'] == "admin") {
+                                    echo "    <li><a class='dropdown-item btn'><span class='fw-bold'>su rol es " . $_SESSION['usuario']['rol'] . "</span></a></li>";
+                                    echo "    <hr class='m-0 p-0'/>";
+                                    echo "    <li><a class='dropdown-item btn'><span class='fw-bold text-primary active'>Inventario Productos</span></a></li>";
+                                    echo "    <li><a class='dropdown-item' href='./adminusuarios.php'>Usuarios sistema</a></li>";
                                     echo "    <li>";
-                                    echo "      <a class='dropdown-item' href='./vistas/logout.php' name='enviar'>Cerrar sesion</a></li>";
+                                    echo "        <hr class='dropdown-divider'>";
                                     echo "    </li>";
-                                    echo "</ul>";
                                 } else {
-                                    //header('Location: ./page/login.php');
-                                    echo "<a class='nav-link' role='button' href='./vistas/login.php'>";
-                                    echo "Inciar sesion";
-                                    echo "</a>";
+                                    echo "    <li><a class='dropdown-item btn'><span class='fw-bold'>su rol es " . $_SESSION['usuario']['rol'] . "</span></a></li>";
+                                    echo "    <li>";
+                                    echo "        <hr class='dropdown-divider'>";
+                                    echo "    </li>";
                                 }
+                                echo "    <li>";
+                                echo "      <a class='dropdown-item' href='./logout.php' name='enviar'>Cerrar sesion</a></li>";
+                                echo "    </li>";
+                                echo "</ul>";
+                            } else {
+                                //header('Location: ./page/login.php');
+                                echo "<a class='nav-link' role='button' href='./login.php'>";
+                                echo "Inciar sesion";
+                                echo "</a>";
+                            }
                             ?>
                         </li>
                     </ul>
@@ -90,129 +90,80 @@
         </nav>
         <div class="contenido">
             <br />
-            <div class="container-md mb-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                <button class="btn btn-success btn-sm fw-bold">Agregar nuevo producto</button>
-            </div>
             <div class="container-fluid-sm px-2">
                 <div class="container-md py-2 mb-2 text-center bg-white rounded">
-                    <h3>Inventario de productos</h3>
+                    <h3>Compras agregadas al carrito</h3>
                 </div>
-                <div class="container-md p-3 text-center bg-white rounded table-responsive mb-3 tablaproductos">
-                    <table class="table table-striped table-hover table-sm">
-                        <thead>
-                            <tr>
-                                <th scope="col">Id</th>
-                                <th scope="col" style="width: 200px;">Nombre</th>
-                                <th scope="col" style="width: 250px;">Descripcion</th>
-                                <th scope="col" style="width: 130px;">Cantidad Stock</th>
-                                <th scope="col" style="width: 100px;">Valor</th>
-                                <th scope="col" style="width: 100px;">usuario</th>
-                                <th scope="col" style="width: 150px;">Fecha Creado</th>
-                                <th scope="col" style="width: 150px;">Fecha Actualizado</th>
-                                <th scope="col">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                                $user  = $_SESSION['usuario']['correo'];
-                                $userquery = "SELECT * FROM usuarios WHERE correo = '$user'";
-                                $resultuser = $conn->query($userquery);
-                                $rowuser = $resultuser->fetch_assoc();
+                <div class="container-md p-3 bg-white rounded table-responsive mb-3 tablaproductos">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-9">
+                                <div style="max-height: 40rem; overflow-y: auto;">
+                                    <?php
+                                        $sql = "SELECT v.id,u.nombre,p.nombre as producto,v.estado_compra,v.cantidad,v.total,v.createdAt,p.imagen,p.descripcion,p.precio,v.id_cliente
+                                        FROM ventas as v
+                                        INNER JOIN usuarios as u ON v.id_cliente = u.id
+                                        INNER JOIN productos as p ON v.id_producto = p.id";
+                                        $result = $conn->query($sql);
+                                        $contador = 0;
+                                        function valorFromat($price)
+                                        {
+                                            setlocale(LC_MONETARY, 'es_CO.utf8');
+                                            $formattedPrice = number_format($price, 0, '.', ',');
+                                            $formattedPrice = str_replace('.00', '', $formattedPrice);
+                                            return $formattedPrice;
+                                        };
 
-                                $sql = "SELECT p.*,u.nombre as usuario FROM productos as p INNER JOIN usuarios as u ON p.id_cliente = u.id";
-                                $result = $conn->query($sql);
-                                $contador = 0;
-
-                                while ($row = $result->fetch_assoc()) {
-                                    $contador++;
-                            ?>
-                                <tr>
-                                    <td><?php echo ($contador) ?></td>
-                                    <td><?php echo $row["nombre"] ?></td>
-                                    <td><?php echo $row["descripcion"] ?></td>
-                                    <td><?php echo $row["cantidad"] ?></td>
-                                    <td><?php echo $row["precio"] ?></td>
-                                    <td><?php echo $row["usuario"] ?></td>
-                                    <td><?php echo $row["created_at"] ?></td>
-                                    <td><?php echo $row["updated_at"] ?></td>
-                                    <td>
-                                        <div class="d-flex justify-content-center align-items-center">
-                                            <div>
-                                                <i class="bi bi-pencil-fill text-primary btn editarproducto" data-bs-toggle="modal" 
-                                                data-bs-target="#exampleModalEdit" title="editar" id="<?php echo $row["id"] ?>"></i>
-                                            </div>
-                                            <div>
-                                                <i class="bi bi-trash-fill text-danger btn eliminarV" title="eliminar" id="<?php echo $row["id"] ?>"></i>
+                                        while ($row = $result->fetch_assoc()) {
+                                            if($row["estado_compra"] == "pendiente" && $_SESSION['usuario']['id'] == $row["id_cliente"]){
+                                                $contador++;
+                                    ?>
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-md-4 rounded border border-success d-flex justify-content-center align-items-center">
+                                                    <img src="<?php echo $row["imagen"] ?>" class="img-fluid" alt="deporte" width="150" height="150" />
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <div class="px-3">
+                                                        <h4 class="text-center border-bottom py-2"><?php echo $row["producto"] ?></h4>
+                                                        <p><?php echo $row["descripcion"] ?></p>
+                                                        <p class="m-0 p-0">
+                                                            <b class="fs-5">Cantidad en stock:</b><span class="mx-2"><?php echo $row["cantidad"] ?></span> <br />
+                                                        </p>
+                                                        <p class="m-0 p-0">
+                                                            <b class="fs-5">Precio:</b><span class="mx-2 preciocarrito">$<?php echo valorFromat($row["precio"]) ?></span>
+                                                        </p>
+                                                        <div class="m-0 p-0">
+                                                            <div class="fw-bold" style="width: 252px; font-size: 18px;">Catidad a comprar:</div>
+                                                            <input type="text" class="form-control cantidad" placeholder="Cantidad" style="width: 255px;">
+                                                        </div>
+                                                        <div class="border-top my-2 py-2">
+                                                            <b class="fw-bold">Valor compra:</b><span class="mx-2">$5252</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                    </td>
-                                </tr>
-                            <?php
-                            };
-                            ?>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+                                        <hr />
+                                    <?php
+                                            }   
+                                        };
+                                    ?>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div>
+                                    <div class="mb-3">
+                                        <b class="fw-bold" style="font-size: 20px;">Total compra:</b><span class="mx-2">$25.0000</span>
+                                    </div>
+                                    </div>
+                                        <button class="btn btn-success w-100">Confirmar compra</button>
+                                    <div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-        <!-- Modal creacion -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar Nuevo producto</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" id="nombre" placeholder="Nombre del producto" aria-label="Username" aria-describedby="basic-addon1">
-                        </div>
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" id="descripcion" placeholder="Descripcion del producto" aria-label="Username" aria-describedby="basic-addon1">
-                        </div>
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" id="cantidad" placeholder="Cantidad del producto" aria-label="Username" aria-describedby="basic-addon1">
-                        </div>
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" id="precio" placeholder="Precio del producto" aria-label="Username" aria-describedby="basic-addon1">
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="button" class="btn btn-sm btn-primary" id="crear">Guardar Cambios</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal Editar -->
-        <div class="modal fade" id="exampleModalEdit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Editar Producto</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <input type="hidden" class="form-control" id="idproducto" placeholder="Nombre del producto" aria-label="Username" aria-describedby="basic-addon1">
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" id="nombre_edit" placeholder="Nombre del producto" aria-label="Username" aria-describedby="basic-addon1">
-                        </div>
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" id="descripcion_edit" placeholder="Descripcion del producto" aria-label="Username" aria-describedby="basic-addon1">
-                        </div>
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" id="cantidad_edit" placeholder="Cantidad del producto" aria-label="Username" aria-describedby="basic-addon1">
-                        </div>
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" id="precio_edit" placeholder="Precio del producto" aria-label="Username" aria-describedby="basic-addon1">
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="button" class="btn btn-sm btn-primary" id="editar">Guardar Cambios</button>
-                    </div>
                 </div>
             </div>
         </div>
@@ -232,7 +183,7 @@
                             <p class="text-center text-muted m-0">Copyright &copy; 2024</p>
                             <p class="text-center text-muted m-0">Todos los derechos reservados</p>
                             <p class="text-center text-muted m-0">Desarrollado por Andres Geovanny Rojas Pedraza</p>
-                            <p class="text-center text-muted m-0">Desarrollo Web ACA 3</p>
+                            <p class="text-center text-muted m-0">Ingeniería de Software 1 ACA 3</p>
                         </div>
                     </div>
                     <div class="col-md-6">

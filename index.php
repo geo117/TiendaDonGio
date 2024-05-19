@@ -34,25 +34,44 @@
                             <a class="nav-link active btn" aria-current="page">Inicio</a>
                         </li>
                         <?php
-                        include './db/conexion.php';
-                        session_start();
-                        function valorFromat($price)
-                        {
-                            setlocale(LC_MONETARY, 'es_CO.utf8');
-                            $formattedPrice = number_format($price, 0, '.', ',');
-                            $formattedPrice = str_replace('.00', '', $formattedPrice);
-                            return $formattedPrice;
-                        };
+                            include './db/conexion.php';
+                            session_start();
+                            function valorFromat($price){
+                                setlocale(LC_MONETARY, 'es_CO.utf8');
+                                $formattedPrice = number_format($price, 0, '.', ',');
+                                $formattedPrice = str_replace('.00', '', $formattedPrice);
+                                return $formattedPrice;
+                            };
 
-                        if (isset($_SESSION['usuario'])) {
-                            echo "<li class='nav-item'>";
-                            echo "   <a class='nav-link active btn' aria-current='page' href='./vistas/productosUsuario.php'><i class='bi bi-basket3-fill'></i></a>";
-                            echo "</li>";
-                        } else {
-                            echo "<li class='nav-item'>";
-                            echo "   <a class='nav-link btn' disabled aria-current='page' onclick='noSesion()'><i class='bi bi-basket3-fill'></i></a>";
-                            echo "</li>";
-                        }
+                            if (isset($_SESSION['usuario'])) {
+                                $sql = "SELECT v.id,u.nombre,p.nombre as producto,v.estado_compra,v.cantidad,v.total,v.createdAt,p.imagen,p.descripcion,p.precio
+                                FROM ventas as v
+                                INNER JOIN usuarios as u ON v.id_cliente = u.id
+                                INNER JOIN productos as p ON v.id_producto = p.id
+                                WHERE v.id_cliente = ".$_SESSION['usuario']['id'];
+                                $result = $conn->query($sql);
+                                $comprasCantidad = $result->num_rows;
+
+                                if($_SESSION['usuario']['rol'] == "admin"){
+                                    echo "";
+                                }else{
+                                    if($comprasCantidad == 0){
+                                        echo "<li class='nav-item'>";
+                                        echo "   <a class='nav-link active btn' aria-current='page' href='./vistas/productosUsuario.php'><i class='bi bi-basket3-fill'></i></a>";
+                                        echo "</li>";    
+                                    }else{
+                                        echo "<li class='nav-item'>";
+                                        echo "   <a class='nav-link active btn d-flex' aria-current='page' href='./vistas/productosUsuario.php'>";
+                                        echo "   <i class='bi bi-basket3-fill'></i><span class='rounded-circle bg-danger text-white' style='width: 22px;'>".$comprasCantidad."</span>";
+                                        echo "   </a>";
+                                        echo "</li>";
+                                    }
+                                }
+                            } else {
+                                echo "<li class='nav-item'>";
+                                echo "   <a class='nav-link btn' disabled aria-current='page' onclick='noSesion()'><i class='bi bi-basket3-fill'></i></a>";
+                                echo "</li>";
+                            }
                         ?>
                         <li class="nav-item dropdown">
                             <?php
@@ -70,8 +89,8 @@
                                     echo "    <li><a class='dropdown-item btn'><span class='fw-bold'>su rol es " . $_SESSION['usuario']['rol'] . "</span></a></li>";
                                     echo "    <hr class='m-0 p-0'/>";
                                     echo "    <li><a class='dropdown-item' href='./vistas/productos.php'>Inventario Productos</span></a></li>";
-                                    echo "    <li><a class='dropdown-item' href='./ventas.php'>Ventas realizadas</a></li>";
-                                    echo "    <li><a class='dropdown-item' href='./usuarios.php'>Usuarios</a></li>";
+                                    echo "    <li><a class='dropdown-item' href='./vistas/ventas.php'>Ventas realizadas</a></li>";
+                                    echo "    <li><a class='dropdown-item' href='./vistas/usuarios.php'>Usuarios</a></li>";
                                     echo "    <li>";
                                     echo "        <hr class='dropdown-divider'>";
                                     echo "    </li>";
@@ -101,35 +120,35 @@
             <div class="container bg-white my-3 rounded p-3">
                 <div class="row">
                     <?php
-                    // Define the number of items per page (adjust as needed)
-                    $items_per_page = 9;
+                        // Define the number of items per page (adjust as needed)
+                        $items_per_page = 8;
 
-                    // Get the total number of items (replace with your actual query)
-                    $total_items_query = "SELECT COUNT(*) FROM productos";  // Replace with your table name
-                    $result = $conn->query($total_items_query);
-                    $total_items = $result->fetch_assoc()["COUNT(*)"];
-                    //$total_items2 = count($total_items);
+                        // Get the total number of items (replace with your actual query)
+                        $total_items_query = "SELECT COUNT(*) FROM productos";  // Replace with your table name
+                        $result = $conn->query($total_items_query);
+                        $total_items = $result->fetch_assoc()["COUNT(*)"];
+                        //$total_items2 = count($total_items);
 
-                    // Calculate the number of pages (rounded up)
-                    //var_dump($total_items. "/" .$items_per_page);
-                    $total_pages = ceil($total_items / $items_per_page);
-                    // Get the current page number (default to 1)
-                    $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+                        // Calculate the number of pages (rounded up)
+                        //var_dump($total_items. "/" .$items_per_page);
+                        $total_pages = ceil($total_items / $items_per_page);
+                        // Get the current page number (default to 1)
+                        $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 
-                    // Limit the query based on current page and items per page
-                    $offset = ($current_page - 1) * $items_per_page;
-                    $limit = $items_per_page;
-                    $sql = "SELECT * FROM productos LIMIT $limit OFFSET $offset";  // Replace with your actual query
-                    $result = $conn->query($sql);
+                        // Limit the query based on current page and items per page
+                        $offset = ($current_page - 1) * $items_per_page;
+                        $limit = $items_per_page;
+                        $sql = "SELECT * FROM productos LIMIT $limit OFFSET $offset";  // Replace with your actual query
+                        $result = $conn->query($sql);
 
-                    while ($row = $result->fetch_assoc()) {
+                        while ($row = $result->fetch_assoc()) {
                     ?>
                         <div class="col-sm-6 col-md-3 mb-3 d-flex justify-content-center align-items-center">
                             <div class="card" style="width: 16rem;">
-                                <img src="https://www.elcarrocolombiano.com/wp-content/uploads/2021/02/20210208-TOP-75-CARROS-MAS-VENDIDOS-DE-COLOMBIA-EN-ENERO-2021-01.jpg" class="card-img-top" alt="carro">
+                                <img src="<?php echo $row["imagen"] ?>" class="card-img-top" alt="carro" width="90" height="200">
                                 <div class="card-body">
                                     <h5 class="card-title text-wrap titulop"><?php echo $row["nombre"] ?></h5>
-                                    <p class="card-text text-wrap">
+                                    <p class="card-text text-wrap descripcion">
                                         <?php echo $row["descripcion"] ?>
                                     </p>
                                     <p class="p-0 m-0">
@@ -144,19 +163,20 @@
                                         <?php
                                         if (isset($_SESSION['usuario'])) {
                                         ?>
-                                            <button id="<?php echo $row["id"] ?>" class="btn btn-sm btn-success w-100" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                            <button id="<?php echo $row["id"] ?>" class="btn btn-sm btn-success w-100 compra" 
+                                            data-bs-toggle="modal" data-bs-target="#exampleModal">
                                                 Comprar
                                             </button>
                                             <div class="mx-1"></div>
-                                            <button id="<?php echo $row["id"] ?>" class="btn btn-sm btn-primary">
+                                            <button id="<?php echo $row["id"] ?>" class="btn btn-sm btn-primary carrito">
                                                 <i class="bi bi-cart-fill" title="agregar al carrito"></i>
                                             </button>
                                         <?php
                                         } else {
                                         ?>
-                                            <button id="<?php echo $row["id"] ?>" onclick='noSesion()' class="btn btn-sm btn-success w-100">Comprar</button>
+                                            <button onclick='noSesion()' class="btn btn-sm btn-success w-100">Comprar</button>
                                             <div class="mx-1"></div>
-                                            <button id="<?php echo $row["id"] ?>" onclick='noSesion()' class="btn btn-sm btn-primary">
+                                            <button onclick='noSesion()' class="btn btn-sm btn-primary">
                                                 <i class="bi bi-cart-fill" title="agregar al carrito"></i>
                                             </button>
                                         <?php
@@ -170,6 +190,29 @@
                     };
                     ?>
                 </div>
+            </div>
+            <div>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                        <?php
+                        // Previous page link
+                        if ($current_page > 1) {
+                            echo '<li class="page-item"><a class="page-link" href="?page=' . ($current_page - 1) . '">Previous</a></li>';
+                        }
+
+                        // Page number links
+                        for ($i = 1; $i <= $total_pages; $i++) {
+                            $active = ($i == $current_page) ? 'active' : '';
+                            echo '<li class="page-item ' . $active . '"><a class="page-link" href="?page=' . $i . '">' . $i . '</a></li>';
+                        }
+
+                        // Next page link
+                        if ($current_page < $total_pages) {
+                            echo '<li class="page-item"><a class="page-link" href="?page=' . ($current_page + 1) . '">Next</a></li>';
+                        }
+                        ?>
+                    </ul>
+                </nav>
             </div>
             <br />
         </div>
@@ -185,12 +228,12 @@
                         <div class="container">
                             <div class="row">
                                 <div class="col-md-6">
-                                    <img class="img-fluid" alt=""
-                                    src="https://www.elcarrocolombiano.com/wp-content/uploads/2021/02/20210208-TOP-75-CARROS-MAS-VENDIDOS-DE-COLOMBIA-EN-ENERO-2021-01.jpg"
-                                    />
+                                    <img class="img-fluid" alt="" src="https://www.elcarrocolombiano.com/wp-content/uploads/2021/02/20210208-TOP-75-CARROS-MAS-VENDIDOS-DE-COLOMBIA-EN-ENERO-2021-01.jpg" />
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="text-center mb-4"><h4 id="nombre">balon de micro</h4></div>
+                                    <div class="text-center mb-4">
+                                        <h4 id="nombre">balon de micro</h4>
+                                    </div>
                                     <div class="mb-4">
                                         <p class="mb-3 p-0"><span id="descripcion">sñaiode de prueba para el producto</span></p>
                                         <p class="m-0 p-0"><b>Precio:</b><span class="mx-1" id="precio">123000</span></p>
@@ -198,8 +241,7 @@
                                             <p style="width: 100%;">
                                                 <b>Cantidad a Comprar:</b>
                                             </p>
-                                            <input type="text" class="form-control" placeholder="cantidad" 
-                                            aria-label="Username" aria-describedby="basic-addon1" id="cantidad">
+                                            <input type="text" class="form-control" placeholder="cantidad" aria-label="Username" aria-describedby="basic-addon1" id="cantidad">
                                         </div>
                                     </div>
                                     <div>
@@ -232,7 +274,7 @@
                             <p class="text-center text-muted m-0">Copyright &copy; 2024</p>
                             <p class="text-center text-muted m-0">Todos los derechos reservados</p>
                             <p class="text-center text-muted m-0">Desarrollado por Andres Geovanny Rojas Pedraza</p>
-                            <p class="text-center text-muted m-0">Desarrollo Web ACA 3</p>
+                            <p class="text-center text-muted m-0">Ingeniería de Software 1 ACA 3</p>
                         </div>
                     </div>
                     <div class="col-md-6">

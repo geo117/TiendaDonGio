@@ -94,7 +94,7 @@
                                 <th scope="col">Id</th>
                                 <th scope="col" style="width: 200px;">Usuario</th>
                                 <th scope="col" style="width: 300px;">Producto</th>
-                                <th scope="col" style="width: 200px;">Cantidad vendida</th>
+                                <th scope="col" style="width: 200px;">Cantidad en stock</th>
                                 <th scope="col" style="width: 200px;">Precio Producto</th>
                                 <th scope="col" style="width: 200px;">Valor total venta</th>
                                 <th scope="col">Fecha comrpa</th>
@@ -106,6 +106,13 @@
                                 $userquery = "SELECT * FROM usuarios WHERE correo = '$user'";
                                 $resultuser = $conn->query($userquery);
                                 $rowuser = $resultuser->fetch_assoc();
+
+                                function valorFromat($price){
+                                    setlocale(LC_MONETARY, 'es_CO.utf8');
+                                    $formattedPrice = number_format($price, 0, '.', ',');
+                                    $formattedPrice = str_replace('.00', '', $formattedPrice);
+                                    return $formattedPrice;
+                                };
 
                                 $sql = "SELECT v.id,v.cantidad,v.total,v.createdAt,u.nombre as usuario,p.nombre as producto,p.precio
                                 FROM ventas as v 
@@ -122,7 +129,7 @@
                                     <td><?php echo $row["usuario"] ?></td>
                                     <td><?php echo $row["producto"] ?></td>
                                     <td><?php echo $row["cantidad"] ?></td>
-                                    <td><?php echo $row["precio"] ?></td>
+                                    <td>$<?php echo valorFromat($row["precio"]) ?></td>
                                     <td><?php echo $row["total"] ?></td>
                                     <td><?php echo $row["createdAt"] ?></td>
                                 </tr>
@@ -151,7 +158,7 @@
                             <p class="text-center text-muted m-0">Copyright &copy; 2024</p>
                             <p class="text-center text-muted m-0">Todos los derechos reservados</p>
                             <p class="text-center text-muted m-0">Desarrollado por Andres Geovanny Rojas Pedraza</p>
-                            <p class="text-center text-muted m-0">Desarrollo Web ACA 3</p>
+                            <p class="text-center text-muted m-0">Ingeniería de Software 1 ACA 3</p>
                         </div>
                     </div>
                     <div class="col-md-6">

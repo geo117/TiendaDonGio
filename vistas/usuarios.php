@@ -148,7 +148,7 @@
                             <p class="text-center text-muted m-0">Copyright &copy; 2024</p>
                             <p class="text-center text-muted m-0">Todos los derechos reservados</p>
                             <p class="text-center text-muted m-0">Desarrollado por Andres Geovanny Rojas Pedraza</p>
-                            <p class="text-center text-muted m-0">Desarrollo Web ACA 3</p>
+                            <p class="text-center text-muted m-0">Ingeniería de Software 1 ACA 3</p>
                         </div>
                     </div>
                     <div class="col-md-6">
